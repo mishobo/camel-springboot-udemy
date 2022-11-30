@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class CamelSpringbootUdemyApplication {
+public class CamelSpringBootUdemyApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CamelSpringbootUdemyApplication.class, args);
+		SpringApplication.run(CamelSpringBootUdemyApplication.class, args);
 	}
 
 }
