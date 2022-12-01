@@ -1,6 +1,8 @@
 package com.husseinabdallah.camelspringbootudemy.components;
 
 import com.husseinabdallah.camelspringbootudemy.beans.NameAddress;
+import com.husseinabdallah.camelspringbootudemy.processor.InboundMessageProcessor;
+import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.dataformat.beanio.BeanIODataFormat;
 import org.slf4j.Logger;
@@ -20,11 +22,9 @@ public class LegacyFileRoute extends RouteBuilder {
                 .routeId("legacyFileMoveRouteId")
                 .split(body().tokenize("\n",1,true))
                 .unmarshal(inboundDataFormat)
-                .process(exchange -> {
-                    NameAddress filedata =exchange.getIn().getBody(NameAddress.class);
-                    logger.info("This is the read fileData:" + filedata.toString());
-                    exchange.getIn().setBody(filedata.toString());
-                })
+                .process(new InboundMessageProcessor())
+                .log(LoggingLevel.INFO, "Transformed body: ${body}")
+                .convertBodyTo(String.class)
                 .to("file:src/data/output?fileName=outputFile.csv&fileExist=append&appendChars=\\n")
                 .end();
     }
