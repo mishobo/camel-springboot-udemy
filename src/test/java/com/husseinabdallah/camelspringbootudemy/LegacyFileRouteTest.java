@@ -27,7 +27,7 @@
 //
 //    @Test
 //    public void testFileMoveByMockingFromEndpoint() throws Exception {
-//        String expectedBody = "This is input data after mocking the from endpoint";
+//        String expectedBody = "OutboundBodyNameAddress(Name=Mike, address=111 Toronto, ON M5F302)";
 //        mockEndpoint.expectedBodiesReceived(expectedBody);
 //        mockEndpoint.expectedMinimumMessageCount(1);
 //
@@ -37,7 +37,7 @@
 //        });
 //
 //        context.start();
-//        producerTemplate.sendBody("direct:mockStart", expectedBody);
+//        producerTemplate.sendBody("direct:mockStart", "name, house_number, city, province, postalCode");
 //        mockEndpoint.assertIsSatisfied();
 //    }
 //

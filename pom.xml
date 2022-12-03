@@ -48,6 +48,21 @@
 			<artifactId>lombok</artifactId>
 			<version>1.18.22</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.camel.springboot</groupId>
+			<artifactId>camel-jacksonxml-starter</artifactId>
+			<version>3.12.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.camel.springboot</groupId>
+			<artifactId>camel-jetty-starter</artifactId>
+			<version>3.12.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.camel.springboot</groupId>
+			<artifactId>camel-jackson-starter</artifactId>
+			<version>3.12.0</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
