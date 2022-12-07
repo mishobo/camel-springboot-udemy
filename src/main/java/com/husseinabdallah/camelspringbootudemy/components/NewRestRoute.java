@@ -23,11 +23,12 @@ public class NewRestRoute extends RouteBuilder {
                 .produces("application/json")
                 .post("nameAddress").type(NameAddress.class).route()
                 .routeId("newRestRouteId")
-                .log(LoggingLevel.INFO, "${body}")
-                .process(new InboundMessageProcessor())
-                .log(LoggingLevel.INFO, "Transformed Body: ${body}")
-                .convertBodyTo(String.class)
-                .to("file:src/data/output?fileName=outputFile.csv&fileExist=append&appendChars=\\n");
+                .log(LoggingLevel.INFO, "Posted data: ${body}")
+//                .process(new InboundMessageProcessor())
+//                .log(LoggingLevel.INFO, "Transformed Body: ${body}")
+//                .convertBodyTo(String.class)
+//                .to("file:src/data/output?fileName=outputFile.csv&fileExist=append&appendChars=\\n");
+                .to("jpa:" + NameAddress.class.getName());
 
     }
 }
