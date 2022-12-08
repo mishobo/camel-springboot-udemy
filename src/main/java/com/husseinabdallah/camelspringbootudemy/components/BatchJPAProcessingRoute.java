@@ -19,6 +19,7 @@ public class BatchJPAProcessingRoute extends RouteBuilder {
                 .log(LoggingLevel.INFO, "fetched and Transformed Rows: ${body}")
                 .convertBodyTo(String.class)
                 .to("file:src/data/output?fileName=outputFile.csv&fileExist=append&appendChars=\\n")
+                .toD("jpa:"+NameAddress.class.getName()+"?nativeQuery=DELETE FROM name_address WHERE id = ${header.consumedId}&useExecuteUpdate=true")
                 .end();
 
     }

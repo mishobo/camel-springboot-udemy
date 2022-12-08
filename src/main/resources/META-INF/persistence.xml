@@ -6,9 +6,9 @@
         <class>com.husseinabdallah.camelspringbootudemy.beans.NameAddress</class>
         <properties>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
-            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/camel_masterclass?createDatabaseIfNotExist=true"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://127.0.0.1:3308/camel_masterclass?createDatabaseIfNotExist=true"/>
             <property name="javax.persistence.jdbc.user" value="root"/>
-            <property name="javax.persistence.jdbc.password" value="mishobo8"/>
+            <property name="javax.persistence.jdbc.password" value="31875595"/>
         </properties>
     </persistence-unit>
 </persistence>
