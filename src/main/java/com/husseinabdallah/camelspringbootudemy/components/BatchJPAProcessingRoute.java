@@ -1,6 +1,7 @@
 package com.husseinabdallah.camelspringbootudemy.components;
 
 import com.husseinabdallah.camelspringbootudemy.beans.NameAddress;
+import com.husseinabdallah.camelspringbootudemy.processor.InboundMessageProcessor;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.stereotype.Component;
@@ -13,7 +14,12 @@ public class BatchJPAProcessingRoute extends RouteBuilder {
         from("timer:readDB?period=10000")
                 .routeId("readDBId")
                 .to("jpa:"+ NameAddress.class.getName()+"?namedQuery=fetchAllRows")
-                .log(LoggingLevel.INFO, "fetched Rows: ${body}");
+                .split(body())
+                .process(new InboundMessageProcessor())
+                .log(LoggingLevel.INFO, "fetched and Transformed Rows: ${body}")
+                .convertBodyTo(String.class)
+                .to("file:src/data/output?fileName=outputFile.csv&fileExist=append&appendChars=\\n")
+                .end();
 
     }
 }
