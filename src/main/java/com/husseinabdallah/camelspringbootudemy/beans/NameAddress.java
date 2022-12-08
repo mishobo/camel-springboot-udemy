@@ -8,6 +8,7 @@ import javax.persistence.*;
 @Entity
 @Data
 @Table(name = "name_address")
+@NamedQuery(name = "fetchAllRows", query="select x from NameAddress x")
 public class NameAddress {
 
     @Id
