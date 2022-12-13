@@ -2,15 +2,24 @@ package com.husseinabdallah.camelspringbootudemy.components;
 
 import com.husseinabdallah.camelspringbootudemy.beans.NameAddress;
 import com.husseinabdallah.camelspringbootudemy.processor.InboundMessageProcessor;
+import org.apache.camel.Exchange;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.rest.RestBindingMode;
 import org.springframework.stereotype.Component;
 
+import javax.jms.JMSException;
+import java.net.ConnectException;
+
 @Component
 public class NewRestRoute extends RouteBuilder {
     @Override
     public void configure() throws Exception {
+
+        onException(JMSException.class, ConnectException.class)
+                .routeId("jmsExceptionRouteId")
+                        .handled(true)
+                                .log(LoggingLevel.INFO, "JMS Exception; handling gracefully");
 
         restConfiguration()
                 .component("jetty")
@@ -30,7 +39,10 @@ public class NewRestRoute extends RouteBuilder {
 //                .to("file:src/data/output?fileName=outputFile.csv&fileExist=append&appendChars=\\n");
 
                 .to("direct:toDB")
-                .to("direct:toActiveMQ");
+                .to("direct:toActiveMQ")
+                        .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(200))
+                                .transform().simple("Message Processed and Result Generated with Body ${body}")
+                        .endRest();
 
         from("direct:toDB")
                 .routeId("toDBId")
