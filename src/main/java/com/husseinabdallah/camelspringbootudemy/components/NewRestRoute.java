@@ -1,9 +1,11 @@
 package com.husseinabdallah.camelspringbootudemy.components;
 
+import com.husseinabdallah.camelspringbootudemy.beans.InboundRestProcessingBean;
 import com.husseinabdallah.camelspringbootudemy.beans.NameAddress;
 import com.husseinabdallah.camelspringbootudemy.processor.InboundMessageProcessor;
 import org.apache.camel.Exchange;
 import org.apache.camel.LoggingLevel;
+import org.apache.camel.Predicate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.rest.RestBindingMode;
 import org.springframework.stereotype.Component;
@@ -15,6 +17,8 @@ import java.net.ConnectException;
 public class NewRestRoute extends RouteBuilder {
     @Override
     public void configure() throws Exception {
+
+        Predicate isCityNairobi = header("userCity").isEqualTo("Nairobi");
 
         onException(JMSException.class, ConnectException.class)
                 .routeId("jmsExceptionRouteId")
@@ -38,11 +42,20 @@ public class NewRestRoute extends RouteBuilder {
 //                .convertBodyTo(String.class)
 //                .to("file:src/data/output?fileName=outputFile.csv&fileExist=append&appendChars=\\n");
 
-                .to("direct:toDB")
-                .to("direct:toActiveMQ")
-                        .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(200))
-                                .transform().simple("Message Processed and Result Generated with Body ${body}")
-                        .endRest();
+                .bean(new InboundRestProcessingBean())
+                //setup rule: if city = Nairobi, send to MQ else send to both DB and MQ
+
+                .choice()
+                .when(isCityNairobi)
+                    .to("direct:toActiveMQ")
+                .otherwise()
+                    .to("direct:toDB")
+                    .to("direct:toActiveMQ")
+                .end()
+
+                .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(200))
+                .transform().simple("Message Processed and Result Generated with Body ${body}")
+                .endRest();
 
         from("direct:toDB")
                 .routeId("toDBId")
